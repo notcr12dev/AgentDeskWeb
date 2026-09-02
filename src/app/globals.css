@@ -12,102 +12,104 @@
 @layer base {
   :root {
     /* "Signal block" — warm charcoal instrument console for AI agents.
-       Palette lifted from the AgentDesk desktop app. */
-    --background: #131417;
-    --foreground: #eceae5;
-    --card: #1b1d21;
-    --card-foreground: #eceae5;
-    --popover: #1b1d21;
-    --popover-foreground: #eceae5;
-    --elevated: #1b1d21;
-    --overlay: #22252a;
-    --hover: #262a30;
-    --active: #2e333a;
-    --primary: #d9853c;
-    --primary-foreground: #131417;
-    --secondary: #22252a;
-    --secondary-foreground: #c8c4ba;
-    --muted: #262a30;
-    --muted-foreground: #9a968d;
-    --accent: #d9853c;
-    --accent-foreground: #131417;
-    --accent-hover: #eda15f;
-    --accent-active: #b96a2a;
-    --destructive: #d9735f;
-    --destructive-foreground: #131417;
-    --success: #8fb873;
-    --warning: #d4a04a;
-    --danger: #d9735f;
-    --info: #7fa2c7;
-    --border: #23262c;
-    --border-default: #353a42;
-    --border-strong: #4a505a;
-    --input: #353a42;
-    --ring: #d9853c;
-    --chart-1: #d9853c;
-    --chart-2: #8fb873;
-    --chart-3: #d4a04a;
-    --chart-4: #7fa2c7;
-    --chart-5: #d9735f;
+       Palette lifted from the AgentDesk desktop app.
+       Stored as RGB triplets so Tailwind can build /alpha utilities
+       (e.g. bg-primary/10) — same scheme the desktop app ships. */
+    --background: 19 20 23;
+    --foreground: 236 234 229;
+    --card: 27 29 33;
+    --card-foreground: 236 234 229;
+    --popover: 27 29 33;
+    --popover-foreground: 236 234 229;
+    --elevated: 27 29 33;
+    --overlay: 34 37 42;
+    --hover: 38 42 48;
+    --active: 46 51 58;
+    --primary: 217 133 60;
+    --primary-foreground: 19 20 23;
+    --secondary: 34 37 42;
+    --secondary-foreground: 200 196 186;
+    --muted: 38 42 48;
+    --muted-foreground: 154 150 141;
+    --accent: 217 133 60;
+    --accent-foreground: 19 20 23;
+    --accent-hover: 237 161 95;
+    --accent-active: 185 106 42;
+    --destructive: 217 115 95;
+    --destructive-foreground: 19 20 23;
+    --success: 143 184 115;
+    --warning: 212 160 74;
+    --danger: 217 115 95;
+    --info: 127 162 199;
+    --border: 35 38 44;
+    --border-default: 53 58 66;
+    --border-strong: 74 80 90;
+    --input: 53 58 66;
+    --ring: 217 133 60;
+    --chart-1: 217 133 60;
+    --chart-2: 143 184 115;
+    --chart-3: 212 160 74;
+    --chart-4: 127 162 199;
+    --chart-5: 217 115 95;
     --radius: 0.375rem;
-    --sidebar: #1b1d21;
-    --sidebar-foreground: #eceae5;
-    --sidebar-primary: #d9853c;
-    --sidebar-primary-foreground: #131417;
-    --sidebar-accent: #262a30;
-    --sidebar-accent-foreground: #eceae5;
-    --sidebar-border: #23262c;
-    --sidebar-ring: #d9853c;
+    --sidebar: 27 29 33;
+    --sidebar-foreground: 236 234 229;
+    --sidebar-primary: 217 133 60;
+    --sidebar-primary-foreground: 19 20 23;
+    --sidebar-accent: 38 42 48;
+    --sidebar-accent-foreground: 236 234 229;
+    --sidebar-border: 35 38 44;
+    --sidebar-ring: 217 133 60;
     --font-sans: "DM Sans", system-ui, sans-serif;
     --font-display: "Space Grotesk", system-ui, sans-serif;
     --font-mono: "JetBrains Mono", ui-monospace, monospace;
   }
 
   .light {
-    --background: #f3f1ec;
-    --foreground: #1c1d20;
-    --card: #faf9f5;
-    --card-foreground: #1c1d20;
-    --popover: #faf9f5;
-    --popover-foreground: #1c1d20;
-    --elevated: #faf9f5;
-    --overlay: #f0eee8;
-    --hover: #ece9e1;
-    --active: #e2ded3;
-    --primary: #b96a2a;
-    --primary-foreground: #ffffff;
-    --secondary: #efede7;
-    --secondary-foreground: #3d3f45;
-    --muted: #ece9e1;
-    --muted-foreground: #6e6a60;
-    --accent: #b96a2a;
-    --accent-foreground: #ffffff;
-    --accent-hover: #a35c22;
-    --accent-active: #8f501d;
-    --destructive: #b3502f;
-    --destructive-foreground: #ffffff;
-    --success: #5f7f4a;
-    --warning: #a57c2c;
-    --danger: #b3502f;
-    --info: #4d7195;
-    --border: #ddd9cf;
-    --border-default: #cbc6ba;
-    --border-strong: #b3ad9f;
-    --input: #cbc6ba;
-    --ring: #b96a2a;
-    --chart-1: #b96a2a;
-    --chart-2: #5f7f4a;
-    --chart-3: #a57c2c;
-    --chart-4: #4d7195;
-    --chart-5: #b3502f;
-    --sidebar: #faf9f5;
-    --sidebar-foreground: #1c1d20;
-    --sidebar-primary: #b96a2a;
-    --sidebar-primary-foreground: #ffffff;
-    --sidebar-accent: #ece9e1;
-    --sidebar-accent-foreground: #1c1d20;
-    --sidebar-border: #ddd9cf;
-    --sidebar-ring: #b96a2a;
+    --background: 243 241 236;
+    --foreground: 28 29 32;
+    --card: 250 249 245;
+    --card-foreground: 28 29 32;
+    --popover: 250 249 245;
+    --popover-foreground: 28 29 32;
+    --elevated: 250 249 245;
+    --overlay: 240 238 232;
+    --hover: 236 233 225;
+    --active: 226 222 211;
+    --primary: 185 106 42;
+    --primary-foreground: 255 255 255;
+    --secondary: 239 237 231;
+    --secondary-foreground: 61 63 69;
+    --muted: 236 233 225;
+    --muted-foreground: 110 106 96;
+    --accent: 185 106 42;
+    --accent-foreground: 255 255 255;
+    --accent-hover: 163 92 34;
+    --accent-active: 143 80 29;
+    --destructive: 179 80 47;
+    --destructive-foreground: 255 255 255;
+    --success: 95 127 74;
+    --warning: 165 124 44;
+    --danger: 179 80 47;
+    --info: 77 113 149;
+    --border: 221 217 207;
+    --border-default: 203 198 186;
+    --border-strong: 179 173 159;
+    --input: 203 198 186;
+    --ring: 185 106 42;
+    --chart-1: 185 106 42;
+    --chart-2: 95 127 74;
+    --chart-3: 165 124 44;
+    --chart-4: 77 113 149;
+    --chart-5: 179 80 47;
+    --sidebar: 250 249 245;
+    --sidebar-foreground: 28 29 32;
+    --sidebar-primary: 185 106 42;
+    --sidebar-primary-foreground: 255 255 255;
+    --sidebar-accent: 236 233 225;
+    --sidebar-accent-foreground: 28 29 32;
+    --sidebar-border: 221 217 207;
+    --sidebar-ring: 185 106 42;
   }
 
   * {
@@ -140,13 +142,13 @@
   }
 
   ::selection {
-    background-color: var(--primary);
-    color: var(--primary-foreground);
+    background-color: rgb(var(--primary));
+    color: rgb(var(--primary-foreground));
   }
 
   /* Instrument console focus: copper outline, like the desktop app. */
   :focus-visible {
-    outline: 2px solid var(--primary);
+    outline: 2px solid rgb(var(--primary));
     outline-offset: 1px;
   }
 
@@ -160,12 +162,12 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    background: var(--border-default);
+    background: rgb(var(--border-default));
     border-radius: 0;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: var(--border-strong);
+    background: rgb(var(--border-strong));
   }
 
   /* Crisp instrument LED blink — on/off, no easing, no scale. */
@@ -197,6 +199,138 @@
   .skip-link {
     @apply absolute -top-10 left-0 bg-primary text-primary-foreground px-4 py-2 z-50 transition-all focus:top-0;
   }
+}
+
+/* ── Electric charge border (Solution workbench screenshot) ──────────────
+   On hover, copper charges race along the frame edge with an electric
+   crackle. Pure SVG stroke-dashoffset animation over a static image layer:
+   cheap to composite and paused (zero cost) until the pointer enters.
+
+   Geometry: the frame always matches the screenshot aspect (1392:910), so a
+   viewBox rect with pathLength={1000} maps 1:1 — every dasharray's dash + gap
+   sums to exactly 1000 so exactly one spark exists on the closed perimeter and
+   the loop is seamless (offset shift of 1000 = one full lap). */
+.electric-charge {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.screenshot-frame:hover .electric-charge {
+  opacity: 1;
+}
+
+/* Dormant hairline rim — the frame reads as slightly live before any spark. */
+.electric-rim {
+  fill: none;
+  stroke: rgb(var(--primary) / 0.14);
+  stroke-width: 1;
+  transition: stroke 0.3s ease;
+}
+
+.screenshot-frame:hover .electric-rim {
+  stroke: rgb(var(--primary) / 0.3);
+}
+
+.electric-arc-fwd,
+.electric-arc-rev {
+  fill: none;
+  stroke-linecap: square;
+  vector-effect: non-scaling-stroke;
+}
+
+/* Forward charge — bright, short, fast. */
+.electric-arc-fwd {
+  stroke: rgb(var(--primary));
+  stroke-width: 2;
+  stroke-dasharray: 30 970;
+  animation: arc-travel 1.8s linear infinite, charge-flicker 1.1s linear infinite;
+  animation-play-state: paused;
+}
+
+/* Counter-charge — dimmer and slower, the electric echo. */
+.electric-arc-rev {
+  stroke: rgb(var(--primary) / 0.38);
+  stroke-width: 1.5;
+  stroke-dasharray: 18 982;
+  animation: arc-travel-rev 3.1s linear infinite, charge-flicker 1.1s linear infinite;
+  animation-play-state: paused;
+}
+
+/* While hovering, let the charges run. */
+.screenshot-frame:hover .electric-arc-fwd,
+.screenshot-frame:hover .electric-arc-rev {
+  animation-play-state: running;
+}
+
+@keyframes arc-travel {
+  to {
+    stroke-dashoffset: -1000;
+  }
+}
+
+@keyframes arc-travel-rev {
+  to {
+    stroke-dashoffset: 1000;
+  }
+}
+
+/* Random-ish crackle — a charge stutters, it does not glide smoothly. */
+@keyframes charge-flicker {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  6% {
+    opacity: 0.55;
+  }
+  8% {
+    opacity: 1;
+  }
+  31% {
+    opacity: 0.8;
+  }
+  34% {
+    opacity: 1;
+  }
+  58% {
+    opacity: 0.45;
+  }
+  61% {
+    opacity: 1;
+  }
+  79% {
+    opacity: 0.85;
+  }
+  82% {
+    opacity: 1;
+  }
+}
+
+/* ── Problem → Solution horizontal corridor ────────────────────────────────
+   Desktop: two 100vw panels pinned side-by-side; vertical scroll drives a
+   horizontal pan (GSAP x on .journey-track). Small screens / reduced motion:
+   plain vertical stacking (.journey stays block, panels natural height). */
+.journey-stage {
+  position: relative;
+}
+
+.journey.horizontal .journey-stage {
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+}
+
+.journey.horizontal .journey-track {
+  display: flex;
+  height: 100%;
+  will-change: transform;
+}
+
+.journey.horizontal .journey-panel {
+  width: 100vw;
+  flex: 0 0 100vw;
+  height: 100%;
 }
 
 /* Subtle film grain over the whole console — breaks digital flatness. */

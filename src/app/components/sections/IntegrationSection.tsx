@@ -10,11 +10,11 @@ import { Code, Terminal, Plug, Puzzle, Layout, ChevronLeft, ChevronRight } from 
 gsap.registerPlugin(ScrollTrigger);
 
 const integrations = [
-  { name: "VS Code", description: "Edit with full agent context", icon: Code },
-  { name: "Cursor", description: "AI-native code editor", icon: Layout },
-  { name: "CLI", description: "Terminal-first workflows", icon: Terminal },
-  { name: "MCP", description: "Model Context Protocol", icon: Plug },
-  { name: "Extensions", description: "Extend with plugins", icon: Puzzle },
+  { name: "VS Code", tag: "editor", description: "Edit with full agent context", icon: Code },
+  { name: "Cursor", tag: "ai.editor", description: "AI-native code editor", icon: Layout },
+  { name: "CLI", tag: "terminal", description: "Terminal-first workflows", icon: Terminal },
+  { name: "MCP", tag: "protocol", description: "Model Context Protocol", icon: Plug },
+  { name: "Extensions", tag: "plugin", description: "Extend with plugins", icon: Puzzle },
 ];
 
 // Duplicate items for infinite loop effect (3 sets)
@@ -71,14 +71,14 @@ export function IntegrationSection() {
         ease: "power2.out",
         onComplete: () => {
           if (!isAnimating) return;
-          
+
           const currentX = Math.abs(parseFloat(gsap.getProperty(track, "x") as string));
           const maxX = 288 * integrations.length * 3;
 
           if (currentX >= maxX) {
             gsap.set(track, { x: -288 * integrations.length, force3D: true });
           }
-          
+
           animate();
         },
       });
@@ -94,9 +94,6 @@ export function IntegrationSection() {
       clearTimeout(timer);
     };
   }, [reducedMotion, isHovering]);
-
-  const handleMouseEnter = () => setIsHovering(true);
-  const handleMouseLeave = () => setIsHovering(false);
 
   const scrollToPrev = () => {
     if (!trackRef.current) return;
@@ -135,10 +132,14 @@ export function IntegrationSection() {
         </div>
 
         {/* Carousel */}
-        <div className="relative group" onMouseEnter={() => setIsHovering(true)} onMouseLeave={() => setIsHovering(false)}>
+        <div
+          className="relative group"
+          onMouseEnter={() => setIsHovering(true)}
+          onMouseLeave={() => setIsHovering(false)}
+        >
           {/* Navigation Arrows */}
           <button
-            onClick={() => gsap.to(trackRef.current, { x: "+=288", duration: 0.6, ease: "power2.out" })}
+            onClick={scrollToPrev}
             className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 lg:-translate-x-12 z-10 p-3 rounded-sm bg-background/80 backdrop-blur-sm border border-border text-muted-foreground hover:text-primary hover:border-primary/60 transition-all duration-300 opacity-0 group-hover:opacity-100 pointer-events-auto"
             aria-label="Previous integration"
           >
@@ -146,42 +147,47 @@ export function IntegrationSection() {
           </button>
 
           <div className="overflow-hidden">
-            <div
-              ref={trackRef}
-              className="flex gap-6 lg:gap-8"
-              style={{ willChange: 'transform' }}
-            >
+            <div ref={trackRef} className="flex gap-4 lg:gap-5" style={{ willChange: "transform" }}>
               {duplicatedIntegrations.map((integration, index) => (
                 <div
                   key={`${integration.name}-${index}`}
-                  className="flex-shrink-0 w-72 lg:w-80 group reveal-item bg-card border border-border rounded-sm p-6 lg:p-8 text-center hover:border-primary/60 hover:bg-elevated transition-all duration-300"
+                  className="flex-shrink-0 w-72 lg:w-80 reveal-item overflow-hidden rounded-sm border border-border bg-elevated transition-colors duration-300 hover:border-primary/60"
                 >
-                  <div className="text-4xl lg:text-5xl mb-4 text-primary">
-                    <integration.icon className="h-10 w-10 lg:h-12 lg:w-12 mx-auto" />
+                  {/* Slot header */}
+                  <div className="flex items-center justify-between border-b border-border px-4 py-2.5">
+                    <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
+                      slot.{String((index % integrations.length) + 1).padStart(2, "0")}
+                    </span>
+                    <span className="flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.16em] text-success">
+                      <span className="inline-block h-1.5 w-1.5 bg-success animate-led" aria-hidden />
+                      linked
+                    </span>
                   </div>
-                  <div className="text-2xl lg:text-3xl font-display font-medium text-foreground">
-                    {integration.name}
+
+                  {/* Body */}
+                  <div className="flex items-start gap-4 p-4 lg:p-5">
+                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-sm border border-primary/40 bg-primary/10 text-primary">
+                      <integration.icon className="h-5 w-5" />
+                    </span>
+                    <div className="min-w-0">
+                      <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
+                        {integration.tag}
+                      </p>
+                      <h3 className="mt-0.5 font-display text-lg font-medium tracking-tight text-foreground">
+                        {integration.name}
+                      </h3>
+                      <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+                        {integration.description}
+                      </p>
+                    </div>
                   </div>
-                  <div className="mt-2 text-sm text-muted-foreground">{integration.description}</div>
                 </div>
               ))}
             </div>
           </div>
 
           <button
-            onClick={() => {
-              gsap.to(trackRef.current, {
-                x: `-=288`,
-                duration: 0.6,
-                ease: "power2.out",
-                onComplete: () => {
-                  const currentX = Math.abs(parseFloat(gsap.getProperty(trackRef.current!, "x") as string));
-                  if (currentX >= 288 * 5 * 3) {
-                    gsap.set(trackRef.current!, { x: -288 * 5, force3D: true });
-                  }
-                },
-              });
-            }}
+            onClick={scrollToNext}
             className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 lg:translate-x-12 z-10 p-3 rounded-sm bg-background/80 backdrop-blur-sm border border-border text-muted-foreground hover:text-primary hover:border-primary/60 transition-all duration-300 opacity-0 group-hover:opacity-100 pointer-events-auto"
             aria-label="Next integration"
           >
@@ -200,11 +206,11 @@ export function IntegrationSection() {
               aria-label={`Go to integration ${i + 1}`}
             />
           ))}
+        </div>
 
-          {/* Tertiary CTA */}
-          <div className="mt-16 lg:mt-20 text-center">
-            <CTAButton href="/docs#quickstart">Get Started Free</CTAButton>
-          </div>
+        {/* Tertiary CTA */}
+        <div className="mt-16 lg:mt-20 text-center">
+          <CTAButton href="/docs#quickstart">Get Started Free</CTAButton>
         </div>
       </div>
     </section>

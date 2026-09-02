@@ -1,82 +1,22 @@
-"use client";
-
-import { useEffect, useRef } from "react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useReducedMotion } from "../../../hooks/useReducedMotion";
+import Image from "next/image";
+import { solutions } from "@/lib/landing-data";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-gsap.registerPlugin(ScrollTrigger);
-
-const solutions = [
-  {
-    index: "01",
-    tag: "CORE.LAYER",
-    title: "Single Orchestration Layer",
-    description: "One interface to manage, monitor, and compose all your AI agents.",
-  },
-  {
-    index: "02",
-    tag: "MEM.PERSIST",
-    title: "Persistent Memory",
-    description: "Agents remember context across sessions. Build knowledge bases that grow with your projects.",
-  },
-  {
-    index: "03",
-    tag: "WF.COMPOSE",
-    title: "Workflow Composition",
-    description: "Chain agents into complex workflows with visual editing, error handling, and automatic retry.",
-  },
-];
-
-const inputTools = ["Cursor", "VS Code", "Claude Code", "Devin", "Codex", "CLI"];
-const outputStages = [
-  { label: "Unified Output", tone: "text-primary border-primary/40 bg-primary/10" },
-  { label: "Deployed Agents", tone: "text-success border-success/40 bg-success/10" },
-  { label: "Workflows", tone: "text-warning border-warning/40 bg-warning/10" },
-];
-
-export function SolutionSection() {
-  const reducedMotion = useReducedMotion();
-  const sectionRef = useRef<HTMLElement>(null);
-  const cardsRef = useRef<HTMLDivElement>(null);
-  const diagramRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (reducedMotion || !sectionRef.current) return;
-
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: sectionRef.current,
-        start: "top 85%",
-        end: "bottom 20%",
-        toggleActions: "play none none reverse",
-      },
-    });
-
-    tl.from(cardsRef.current?.children || [], {
-      opacity: 0,
-      y: 24,
-      duration: 0.7,
-      ease: "power2.out",
-      stagger: 0.12,
-    }).from(
-      diagramRef.current?.children || [],
-      {
-        opacity: 0,
-        y: 16,
-        duration: 0.5,
-        ease: "power2.out",
-        stagger: 0.08,
-      },
-      "-=0.3"
-    );
-  }, [reducedMotion]);
-
+/** Solution hero — heading + live workbench screenshot. First used as the
+ *  second panel of the horizontal corridor, and stacked vertically on small
+ *  screens. The three cards + CTA live in <SolutionTail /> right after. */
+export function SolutionHeroPanel({ screen = false }: { screen?: boolean }) {
   return (
-    <section id="solution" className="py-24 lg:py-32 bg-background">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16 lg:mb-20">
+    <section
+      id="solution"
+      className={
+        screen
+          ? "journey-panel relative flex items-center overflow-hidden bg-background"
+          : "journey-panel relative py-24 lg:py-32 bg-background"
+      }
+    >
+      <div className={`relative mx-auto w-full ${screen ? "max-w-5xl px-5 sm:px-8" : "max-w-7xl px-4 sm:px-6 lg:px-8"}`}>
+        <div className="text-center mb-8 lg:mb-10">
           <p className="flex items-center justify-center gap-2 font-mono text-xs uppercase tracking-[0.16em] text-muted-foreground">
             <span className="inline-block h-3 w-0.5 bg-primary" aria-hidden />
             The solution
@@ -89,116 +29,54 @@ export function SolutionSection() {
           </p>
         </div>
 
-        {/* Orchestration Layer Diagram — rigid console schematic */}
-        <div className="mb-16 lg:mb-20" ref={diagramRef}>
-          <div className="max-w-4xl mx-auto rounded-sm border border-border-default bg-elevated overflow-hidden">
-            {/* Console header */}
-            <div className="flex items-center justify-between border-b border-border px-4 py-2.5">
-              <span className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.16em] text-foreground">
-                <span className="inline-block h-2 w-2 bg-primary" aria-hidden />
-                Orchestration pipeline
-              </span>
-              <span className="hidden sm:flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
-                <span className="inline-block h-1.5 w-1.5 bg-success animate-led" aria-hidden />
-                Stable
-              </span>
-            </div>
+        {/* Workbench screenshot — the real orchestration surface */}
+        <div className="relative">
+          <div
+            className={`screenshot-frame relative mx-auto overflow-hidden rounded-sm border border-border-default bg-elevated shadow-rail ${
+              screen ? "max-w-2xl" : "max-w-4xl"
+            }`}
+          >
+            <Image
+              src="/docs/SSH2.png"
+              alt="AgentDesk workbench: three-panel console with agent workflow, sessions and live chat"
+              width={1392}
+              height={910}
+              quality={90}
+              sizes="(min-width: 1024px) 60vw, 92vw"
+              className="h-auto w-full select-none"
+              draggable={false}
+            />
 
-            {/* Stage 01 — Input */}
-            <div className="flex border-b border-border">
-              <div className="w-10 sm:w-14 shrink-0 border-r border-border flex flex-col items-center justify-center gap-1 py-4">
-                <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-primary">01</span>
-                <span className="font-mono text-[10px] text-muted-foreground" aria-hidden>↓</span>
-              </div>
-              <div className="flex-1 px-4 sm:px-6 py-4">
-                <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground mb-2.5">Input</p>
-                <div className="flex flex-wrap gap-1.5">
-                  {inputTools.map((tool) => (
-                    <span
-                      key={tool}
-                      className="rounded-sm border border-border-default bg-background px-2.5 py-1 font-mono text-xs text-secondary-foreground"
-                    >
-                      {tool}
-                    </span>
-                  ))}
-                </div>
-              </div>
-              <div className="hidden sm:flex w-10 shrink-0 items-center justify-center font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
-                In
-              </div>
-            </div>
-
-            {/* Stage 02 — Orchestrator */}
-            <div className="flex border-b border-border">
-              <div className="w-10 sm:w-14 shrink-0 border-r border-border flex flex-col items-center justify-center gap-1 py-4">
-                <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-primary">02</span>
-                <span className="font-mono text-[10px] text-muted-foreground" aria-hidden>↓</span>
-              </div>
-              <div className="flex-1 px-4 sm:px-6 py-4">
-                <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground mb-2.5">Core</p>
-                <div className="relative overflow-hidden rounded-sm border border-border-default bg-background">
-                  <div
-                    className="absolute inset-0"
-                    aria-hidden
-                    style={{
-                      backgroundImage:
-                        "linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px)",
-                      backgroundSize: "22px 22px",
-                      opacity: 0.4,
-                    }}
-                  />
-                  <div className="relative flex items-center justify-between gap-3 px-4 py-3">
-                    <span className="inline-block h-2.5 w-2.5 bg-primary shrink-0" aria-hidden />
-                    <div className="text-center">
-                      <p className="font-display text-sm font-medium tracking-tight text-foreground">AgentDesk Orchestration</p>
-                      <p className="mt-0.5 font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground">
-                        Memory · Planning · Evaluation · MCP
-                      </p>
-                    </div>
-                    <span className="inline-block h-2.5 w-2.5 bg-primary shrink-0" aria-hidden />
-                  </div>
-                </div>
-              </div>
-              <div className="hidden sm:flex w-10 shrink-0 items-center justify-center font-mono text-[10px] uppercase tracking-[0.16em] text-success">
-                Run
-              </div>
-            </div>
-
-            {/* Stage 03 — Output */}
-            <div className="flex">
-              <div className="w-10 sm:w-14 shrink-0 border-r border-border flex flex-col items-center justify-center gap-1 py-4">
-                <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-primary">03</span>
-              </div>
-              <div className="flex-1 px-4 sm:px-6 py-4">
-                <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground mb-2.5">Output</p>
-                <div className="flex flex-wrap gap-1.5">
-                  {outputStages.map((stage) => (
-                    <span
-                      key={stage.label}
-                      className={`rounded-sm border px-2.5 py-1 font-mono text-xs ${stage.tone}`}
-                    >
-                      {stage.label}
-                    </span>
-                  ))}
-                </div>
-              </div>
-              <div className="hidden sm:flex w-10 shrink-0 items-center justify-center font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
-                Out
-              </div>
-            </div>
-
-            {/* Console footer */}
-            <div className="flex items-center justify-between border-t border-border bg-background/60 px-4 py-2">
-              <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground">Status</span>
-              <span className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.16em] text-foreground">
-                <span className="inline-block h-1.5 w-1.5 bg-success animate-led" aria-hidden />
-                All systems operational
-              </span>
-            </div>
+            {/* Electric charge — copper sparks race along the frame edge on hover */}
+            <svg
+              aria-hidden
+              className="electric-charge absolute inset-0 h-full w-full"
+              viewBox="0 0 1392 910"
+              preserveAspectRatio="none"
+            >
+              <rect className="electric-rim" x="2" y="2" width="1388" height="906" rx="4" />
+              <rect className="electric-arc-fwd" x="2" y="2" width="1388" height="906" rx="4" pathLength={1000} />
+              <rect className="electric-arc-rev" x="2" y="2" width="1388" height="906" rx="4" pathLength={1000} />
+            </svg>
           </div>
-        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8" ref={cardsRef}>
+          {/* Corner label */}
+          <p className="pointer-events-none absolute -top-3 right-3 lg:right-6 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground/60 bg-background px-1">
+            Agent console · live session
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/** The three capability cards + secondary CTA. Flows vertically right after the
+ *  horizontal corridor (before Features), and after the hero on small screens. */
+export function SolutionTail() {
+  return (
+    <section className="bg-background pb-24 lg:pb-32">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
           {solutions.map((solution) => (
             <Card
               key={solution.title}

@@ -1,8 +1,44 @@
 "use client";
 
+import { useEffect, useRef } from "react";
+import Image from "next/image";
 import { CTAButton } from "./CTAButton";
 
+/** Max tilt in degrees when the panel "looks" at the pointer. */
+const MAX_TILT = 6;
+
 export function Hero() {
+  const panelRef = useRef<HTMLDivElement | null>(null);
+
+  // Pointer-follow tilt. Writes the transform straight to the DOM node on each
+  // pointermove — no React state, no re-renders, no rAF loop — and lets a CSS
+  // transition smooth it out. GPU-composited only, so it costs ~nothing.
+  useEffect(() => {
+    const el = panelRef.current;
+    if (!el) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const onMove = (e: PointerEvent) => {
+      const rect = el.getBoundingClientRect();
+      if (rect.width === 0 || rect.height === 0) return;
+      const mx = ((e.clientX - rect.left) / rect.width) * 2 - 1; // -1 left .. 1 right
+      const my = ((e.clientY - rect.top) / rect.height) * 2 - 1; // -1 top .. 1 bottom
+      const ry = (mx * MAX_TILT).toFixed(3);
+      const rx = (-my * MAX_TILT).toFixed(3);
+      el.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg) scale(1.015)`;
+    };
+    const onLeave = () => {
+      el.style.transform = "rotateX(0deg) rotateY(0deg) scale(1)";
+    };
+
+    el.addEventListener("pointermove", onMove, { passive: true });
+    el.addEventListener("pointerleave", onLeave, { passive: true });
+    return () => {
+      el.removeEventListener("pointermove", onMove);
+      el.removeEventListener("pointerleave", onLeave);
+    };
+  }, []);
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16">
       {/* Console grid texture */}
@@ -10,7 +46,7 @@ export function Hero() {
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-background/40 to-background" />
 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-24">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+        <div className="grid lg:grid-cols-2 xl:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)] gap-12 lg:gap-14 xl:gap-16 items-center">
           {/* Text Content */}
           <div>
             <p className="flex items-center gap-2 font-mono text-xs uppercase tracking-[0.16em] text-muted-foreground">
@@ -34,68 +70,29 @@ export function Hero() {
             </div>
           </div>
 
-          {/* Visual: Instrument console */}
-          <div className="relative">
-            <div className="relative rounded-lg border border-border bg-elevated overflow-hidden shadow-rail">
-              {/* Console header */}
-              <div className="flex items-center justify-between border-b border-border px-4 py-2.5">
-                <span className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
-                  <span className="inline-block h-1.5 w-1.5 rotate-45 bg-primary" aria-hidden />
-                  Agent network
-                </span>
-                <span className="flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
-                  <span className="inline-block h-1.5 w-1.5 rounded-full bg-success animate-led" aria-hidden />
-                  online
-                </span>
-              </div>
-
-              {/* Console body */}
-              <div className="relative p-8 lg:p-10">
-                {/* Grid background */}
-                <div className="absolute inset-0 bg-grid-pattern bg-[size:40px_40px] opacity-40" />
-
-                {/* Central orchestration node */}
-                <div className="relative z-10 flex flex-col items-center justify-center min-h-[320px] lg:min-h-[360px]">
-                  <div className="relative">
-                    {/* Static rotated-square signal rings — geometric echo of the mark */}
-                    <div className="absolute -inset-8 lg:-inset-10 rotate-45 border border-primary/25" aria-hidden />
-                    <div className="absolute -inset-16 lg:-inset-20 rotate-45 border border-primary/10" aria-hidden />
-
-                    {/* Central copper signal node */}
-                    <div className="relative flex h-20 w-20 lg:h-24 lg:w-24 items-center justify-center rounded-md border border-primary/40 bg-primary/10">
-                      <span className="block h-8 w-8 lg:h-10 lg:w-10 rotate-45 bg-primary" aria-hidden />
-                    </div>
-                  </div>
-                  <p className="mt-10 font-mono text-[10px] uppercase tracking-[0.2em] text-primary">
-                    Orchestrator
-                  </p>
-                </div>
-
-                {/* Tool slots */}
-                <div className="relative z-10 flex flex-wrap items-center justify-center gap-3 pt-8">
-                  {["Cursor", "IDE", "CLI", "MCP"].map((tool) => (
-                    <span
-                      key={tool}
-                      className="inline-flex items-center gap-1.5 rounded border border-border bg-background px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.14em] text-secondary-foreground"
-                    >
-                      <span className="inline-block h-1 w-1 rotate-45 bg-primary/70" aria-hidden />
-                      {tool}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              {/* Console status strip */}
-              <div className="flex flex-wrap items-center justify-between gap-2 border-t border-border bg-background/60 px-4 py-2.5 font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
-                <span>4 agents online</span>
-                <span className="hidden sm:inline">memory sync · ok</span>
-                <span>cost · $0.00</span>
-              </div>
+          {/* Visual: AgentDesk workbench screenshot — bigger on desktop, tilts to look at the pointer */}
+          <div className="relative [perspective:1100px]">
+            <div
+              ref={panelRef}
+              data-tilt-panel
+              className="relative rounded-lg border border-border bg-elevated overflow-hidden shadow-rail will-change-transform transition-transform duration-200 ease-out"
+            >
+              <Image
+                src="/docs/SSH1.png"
+                alt="AgentDesk workbench: agent orchestration console"
+                width={1426}
+                height={938}
+                priority
+                quality={90}
+                sizes="(min-width: 1280px) 52vw, (min-width: 1024px) 46vw, 92vw"
+                className="h-auto w-full select-none"
+                draggable={false}
+              />
             </div>
 
-            {/* Corner labels */}
-            <p className="absolute -top-3 -right-3 hidden lg:block font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground/60 bg-background px-1">
-              Orchestration layer
+            {/* Corner label — stays flat while the panel tilts */}
+            <p className="pointer-events-none absolute -top-3 -right-3 hidden lg:block font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground/60 bg-background px-1">
+              AgentDesk workbench
             </p>
           </div>
         </div>
